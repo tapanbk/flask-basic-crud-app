@@ -1,0 +1,41 @@
+{% extends "includes/layout.html" %}
+
+{% block contents %}
+            <div class="card">
+                <div class="card-body">
+                    <h2>User List</h2>
+                               {% include "includes/flash.html" %}
+
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Full Name</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Address</th>
+                            <th scope="col">Phone</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>{{user.first_name}} {{user.last_name}}</td>
+                            <td>{{user.email}}</td>
+                            <td>{{user.address}}</td>
+                            <td>{{user.phone}}</td>
+                            <td>
+                                <a href="{{url_for('details', userId=user.id)}}" type="button" class="btn btn-primary">Details</a>
+                                <a href="{{url_for('userEdit', userId=user.id)}}" type="button" class="btn btn-primary">Edit</a>
+                                <a href="{{url_for('userDelete', userId=user.id)}}" type="button" class="btn btn-danger">Delete</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+{% endblock %}
+

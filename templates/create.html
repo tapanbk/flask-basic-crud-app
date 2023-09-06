@@ -1,0 +1,63 @@
+{% extends "includes/layout.html" %}
+
+{% block contents %}
+
+
+            <div class="card">
+                <div class="card-body">
+                    <h2>User Registration</h2>
+
+                    <form action="{{url_for('create')}}" method="post">
+
+                        <div class="mb-3 row">
+                            <label for="first_name" class="col-sm-3 col-form-label">First Name:</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="first_name" value="{{user.first_name}}" name="first_name">
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
+                            <label for="last_name" class="col-sm-3 col-form-label">Last Name:</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="last_name" value="{{user.last_name}}"  name="last_name">
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label for="email" class="col-sm-3 col-form-label">Email:</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="email" value="{{user.email}}" name="email">
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label for="password" class="col-sm-3 col-form-label">Password:</label>
+                            <div class="col-sm-9">
+                                <input type="password" class="form-control" id="password" value="" name="password">
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
+                            <label for="address" class="col-sm-3 col-form-label">Address</label>
+                            <div class="col-sm-9">
+                                <textarea name="address" class="form-control" id="address" cols="30" rows="2" >{{user.address}}</textarea>
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label for="phone" class="col-sm-3 col-form-label">Phone</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="phone" name="phone" value="{{user.phone}}">
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
+                            <div class="col-sm-6 ">
+                                <button type="reset" class="btn btn-danger float-start">Reset</button>
+                            </div>
+                            <div class="col-sm-6 ">
+                                <button type="submit" class="btn btn-primary float-end">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+{% endblock %}

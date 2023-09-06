@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>User creates</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-2">
+            {% include "includes/navigation.html" %}
+        </div>
+        <div class="col-md-8">
+            {% block contents %}{% endblock %}
+        </div>
+    </div>
+</div>
+<script src="{{url_for('static', filename='bootstrap.bundle.min.js') }}"></script>
+</body>
+</html>
