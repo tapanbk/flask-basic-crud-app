@@ -2,8 +2,14 @@
     <div class="card-body">
         <ol style="list-style: none;">
             <li><a href="{{url_for('home')}}">Home</a></li>
-            <li><a href="{{url_for('list')}}">List</a></li>
-            <li><a href="{{url_for('create')}}">create</a></li>
+
+            {% if session['is_logged_in'] %}
+                <li><a href="{{url_for('list')}}">List</a></li>
+                <li><a href="{{url_for('create')}}">create</a></li>
+                <li><a href="{{url_for('logout')}}">logout</a></li>
+            {% else %}
+                <li><a href="{{url_for('login')}}">Login</a></li>
+            {% endif %}
         </ol>
     </div>
 </div>
