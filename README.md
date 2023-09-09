@@ -2,18 +2,15 @@
 
 ## Install Flask
 ```shell
-pip install Flash
+pip install Flask
 ```
 
+## Tutorials for Flask
+https://www.tutorialspoint.com/flask/index.htm
 
 ## install flash-qlaclchemy
 ```shell
 pip install flask-sqlalchemy
-```
-
-## install flask-bcrypt
-```shell
-pip install flask-bcrypt
 ```
 
 
@@ -21,11 +18,22 @@ pip install flask-bcrypt
 https://flask-sqlalchemy.palletsprojects.com/en/3.0.x/queries/
 
 
-## Tutorials for Flask
-https://www.tutorialspoint.com/flask/index.htm
+
+## install flask-bcrypt
+```shell
+pip install flask-bcrypt
+```
+
+## Documentation for Flask bcrypt
+https://www.geeksforgeeks.org/password-hashing-with-bcrypt-in-flask/
 
 ## Run the Flask in debug mode
 ```shell
 flask --app app run --debug
+```
+
+or  
+```shell
+python app.py
 ```
 
