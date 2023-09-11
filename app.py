@@ -37,6 +37,7 @@ class User(db.Model):
     phone = db.Column(db.String(200))
     address = db.Column(db.String(200))
     password = db.Column(db.String(200))
+    posts = db.relationship('Post', backref='user')
 
     def __init__(self, first_name, last_name, email, phone, address, password):
         self.first_name = first_name
@@ -49,6 +50,11 @@ class User(db.Model):
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
+
+class Post(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
 
 
 @app.route('/')
@@ -173,6 +179,12 @@ def invalid_route(e):
 @app.errorhandler(500)
 def invalid_route(e):
     return render_template('500.html')
+
+
+@app.route('/create-db')
+def create_db():
+    db.create_all()
+
 
 if __name__ == '__main__':
     app.run(debug=True)
