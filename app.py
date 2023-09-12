@@ -11,10 +11,9 @@ app.secret_key = "Random Key"
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 
-
 def logged_in(view_function):
     def wrapper(*args, **kwargs):
-        if not session.get('username') and not session.get('is_logged_in'):
+        if not session.get('is_logged_in'):
             flash("UnAuthorized")
             return redirect(url_for('login'))
         return view_function(*args, **kwargs)
@@ -37,7 +36,6 @@ class User(db.Model):
     phone = db.Column(db.String(200))
     address = db.Column(db.String(200))
     password = db.Column(db.String(200))
-    posts = db.relationship('Post', backref='user')
 
     def __init__(self, first_name, last_name, email, phone, address, password):
         self.first_name = first_name
@@ -49,13 +47,6 @@ class User(db.Model):
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
-
-
-class Post(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    content = db.Column(db.Text)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
-
 
 @app.route('/')
 def home():
@@ -166,9 +157,9 @@ def login():
 @app.route('/logout')
 def logout():
     session.pop('is_logged_in', None)
-    session.pop('username', None)
+    session.pop('full_name', None)
     flash("Successfully Logged out")
-    return redirect(url_for('login'))
+    return redirect(url_for('home'))
 
 
 @app.errorhandler(404)

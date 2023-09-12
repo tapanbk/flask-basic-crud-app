@@ -4,6 +4,13 @@
         <div class="card">
             <div class="card-body">
                  <h2>Home Page</h2>
+                <p>
+                    {% if session['is_logged_in']%}
+                        <p>welcome {{session['full_name']}}</p>
+                {% else %}
+                    <p>Welcome guest</p>
+                    {% endif %}
+                </p>
             </div>
         </div>
 {% endblock %}

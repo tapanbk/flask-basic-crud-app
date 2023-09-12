@@ -11,7 +11,7 @@ https://www.tutorialspoint.com/flask/index.htm
 
 
 
-## install flash-qlaclchemy
+## install flash-sqlalchemy
 ```shell
 pip install flask-sqlalchemy
 ```
