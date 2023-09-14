@@ -141,3 +141,11 @@ group_user = GroupUser(user_id=user1.id, group_id=teacher.id)
 db.session.add(group_user)
 db.session.commit()
 ```
+
+### Add group to the user
+```shell
+user = User.query.get_or_404(1)
+group_ = Group.query.get_or_404(1)
+user.groups.append(group)
+db.session.commit()
+```

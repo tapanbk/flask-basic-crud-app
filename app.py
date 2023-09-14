@@ -3,6 +3,7 @@ from functools import wraps
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 
+from constants import TEACHER, STUDENT, LIBRARIAN, COORDINATOR
 
 app = Flask(__name__)
 
@@ -21,10 +22,12 @@ def logged_in(view_function):
     return wrapper
 
 def has_of_required_group(needed_group):
-    username_to_check = "admin3@gmail.com"
-    return User.query.join(GroupUser).join(Group).filter(User.email == username_to_check).filter(
-        Group.name == needed_group).exist()
-
+    user_id = session.get('user_id')
+    user = User.query.filter_by(id=user_id).first()
+    if not user:
+        return False
+    groups = user.groups
+    return any(group_user.name == needed_group for group_user in groups)
 
 def authorization_required(needed_group):
     def decorator(f):
@@ -55,8 +58,7 @@ class User(db.Model):
     phone = db.Column(db.String(200))
     address = db.Column(db.String(200))
     password = db.Column(db.String(200))
-
-    groups = db.relationship('GroupUser', back_populates='user')
+    groups = db.relationship('Group',  secondary='group_user')
 
     # """User Model"""
     __tablename__ = 'users'
@@ -82,11 +84,12 @@ class Group(db.Model):
     name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(255), nullable=False)
 
-    users = db.relationship('GroupUser', back_populates='group')
+    users = db.relationship('User', secondary='group_user', overlaps='groups')
 
     def __init__(self, name, description):
         self.name = name
         self.description = description
+
 
 class GroupUser(db.Model):
     """GroupUser Model for the many-to-many relationship"""
@@ -96,8 +99,6 @@ class GroupUser(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     group_id = db.Column(db.Integer, db.ForeignKey('groups.id'), nullable=False)
 
-    user = db.relationship('User', back_populates='groups')
-    group = db.relationship('Group', back_populates='users')
 
     def __init__(self, user_id, group_id):
         self.user_id = user_id
@@ -110,8 +111,8 @@ def home():
 
 
 @app.route('/create/', methods=['POST', 'GET'], endpoint="create")
-@authorization_required('Teacher')
 @logged_in
+@authorization_required(TEACHER)
 def create():
     form = {}
     if request.method == "POST":
@@ -131,6 +132,7 @@ def create():
 
 
 @app.route('/user/<int:userId>/details/')
+@authorization_required(TEACHER)
 def details(userId):
     user = User.query.filter_by(id= userId).first()
     return render_template('details.html', user=user)
@@ -207,6 +209,7 @@ def login():
             return render_template('login.html', user_details=user_details)
         session['is_logged_in'] = True
         session['full_name'] = f'{user.first_name} {user.last_name}'
+        session['user_id'] = user.id
         flash("Successfully Logged in")
         return redirect(url_for('list'))
 
@@ -215,6 +218,7 @@ def login():
 def logout():
     session.pop('is_logged_in', None)
     session.pop('full_name', None)
+    session.pop('user_id', None)
     flash("Successfully Logged out")
     return redirect(url_for('home'))
 
