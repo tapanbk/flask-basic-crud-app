@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, flash, redirect, url_for, session
+from flask import Flask, render_template, request, flash, redirect, url_for, session, jsonify
+from functools import wraps
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 
@@ -19,6 +20,24 @@ def logged_in(view_function):
         return view_function(*args, **kwargs)
     return wrapper
 
+def has_of_required_group(needed_group):
+    username_to_check = "admin3@gmail.com"
+    return User.query.join(GroupUser).join(Group).filter(User.email == username_to_check).filter(
+        Group.name == needed_group).exist()
+
+
+def authorization_required(needed_group):
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            if not has_of_required_group(needed_group):
+                flash("UnAuthorized")
+                return redirect(url_for('home'))
+            return f(*args, **kwargs)
+        return decorated_function
+    return decorator
+
+
 
 def hash_password(password):
     return bcrypt.generate_password_hash(password).decode('utf-8')
@@ -29,13 +48,19 @@ def check_if_password_is_valid(database_password, input_password):
 
 
 class User(db.Model):
-    id = db.Column('user_id', db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(100))
     last_name = db.Column(db.String(100))
     email = db.Column(db.String(50))
     phone = db.Column(db.String(200))
     address = db.Column(db.String(200))
     password = db.Column(db.String(200))
+
+    groups = db.relationship('GroupUser', back_populates='user')
+
+    # """User Model"""
+    __tablename__ = 'users'
+
 
     def __init__(self, first_name, last_name, email, phone, address, password):
         self.first_name = first_name
@@ -48,12 +73,44 @@ class User(db.Model):
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
+
+class Group(db.Model):
+    """Group Model"""
+    __tablename__ = 'groups'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.String(255), nullable=False)
+
+    users = db.relationship('GroupUser', back_populates='group')
+
+    def __init__(self, name, description):
+        self.name = name
+        self.description = description
+
+class GroupUser(db.Model):
+    """GroupUser Model for the many-to-many relationship"""
+    __tablename__ = 'group_user'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    group_id = db.Column(db.Integer, db.ForeignKey('groups.id'), nullable=False)
+
+    user = db.relationship('User', back_populates='groups')
+    group = db.relationship('Group', back_populates='users')
+
+    def __init__(self, user_id, group_id):
+        self.user_id = user_id
+        self.group_id = group_id
+
+
 @app.route('/')
 def home():
         return render_template('home.html')
 
 
 @app.route('/create/', methods=['POST', 'GET'], endpoint="create")
+@authorization_required('Teacher')
 @logged_in
 def create():
     form = {}

@@ -93,7 +93,7 @@ db.session.commit()
 
 ### Get or 404 
 ```shell
-post = User.query.get_or_404(post_id)
+user = User.query.get_or_404(user_id)
 ```
 
 
@@ -123,4 +123,21 @@ for user in users:
         print('>', post.content)
     print('-'*30)
 
+```
+
+
+### Create the multiple group at once
+```shell
+teacher = Group(name="Teacher", description="Teacher Group")
+student = Group(name="Student", description="Student Group")
+db.session.add_all([teacher, student])
+db.session.commit()
+```
+
+### Add group to the user
+```shell
+user1 = User.query.get_or_404(1)
+group_user = GroupUser(user_id=user1.id, group_id=teacher.id)
+db.session.add(group_user)
+db.session.commit()
 ```
