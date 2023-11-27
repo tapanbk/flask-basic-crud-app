@@ -149,3 +149,26 @@ group_ = Group.query.get_or_404(1)
 user.groups.append(group)
 db.session.commit()
 ```
+
+
+### Docker build
+```shell
+docker build -t flask-app . 
+```
+
+### Run Docker 
+```shell
+sudo docker run -it -p 5000:5000 -d flask-app  
+```
+
+
+### Check docker is running
+```shell
+docker container ls   
+docker images 
+```
+
+### Open the app in browser 
+```shell
+http://localhost:5000/  
+```
