@@ -172,3 +172,44 @@ docker images
 ```shell
 http://localhost:5000/  
 ```
+
+## Docker Hub
+### Docker login
+
+```
+docker login
+```
+To login enter the following command and type username and password
+
+
+### See the list of docker images
+
+```shell
+docker images
+```
+
+### Tag the docker image to local name
+```shell
+docker build -t flask-application:<version> .
+```
+### Tag the docker image directly to the remote docker repo URL
+```shell
+ docker image tag tapanbk/flask-application:<version> .
+```
+
+### Tag the local image to the docker repo URL if not tagged previously
+The tapanbk/flask-application is the remote docker repo URL and the <version> is the desired version tag
+
+```shell
+ docker image tag flask-application:<version> tapanbk/flask-application:<version>
+```
+We don't need to tag to the local image to tag to remote docker repo url
+
+
+### Push the remote tagged image to the docker hub
+
+```shell
+docker image push tapanbk/flask-application:<version>
+```
+We must tag to the remote docker repo url to be able to push to the repo.
+tapanbk/flask-application is the remoter docker repo url and <version> is the desired version
